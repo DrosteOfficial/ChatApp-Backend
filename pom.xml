@@ -15,7 +15,7 @@
 	<description>Web</description>
 	<properties>
 		<java.version>17</java.version>
-		<strart-class> JSWD.Web.WebApplication</strart-class>
+		<strart-class>JSWD.Web.WebApplication</strart-class>
 	</properties>
 	<dependencies>
 		<dependency>

@@ -1,4 +1,4 @@
-package model;
+package JSWD.Web.model;
 
 import jakarta.persistence.*;
 
