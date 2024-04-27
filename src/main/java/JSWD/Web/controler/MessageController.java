@@ -25,14 +25,14 @@ public class MessageController {
         return ResponseEntity.ok(messageService.getMessageById(x).get());
     }
     @GetMapping("/get")
-    public ResponseEntity<List<Message>> getEmployeeMessages() {
+    public ResponseEntity<List<Message>> getmessages() {
         if (messageService.getMessages().isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(messageService.getMessages().get());
     }
     @PostMapping("/save")
-    public void saveMessage(@RequestBody Message message) {
+    public void saveMessage(@RequestBody Message message ) {
         messageService.saveMessage(message);
     }
 

@@ -24,7 +24,7 @@ public class EmployeeService {
     @Autowired
     IImageRepository imageRepository;
 
-    public EmployeeService(IEmployeeRepository employeeRepository, IMessageRepository messageRepository , IImageRepository imageRepository) {
+    public EmployeeService(IEmployeeRepository employeeRepository, IMessageRepository messageRepository, IImageRepository imageRepository) {
         this.employeeRepository = Objects.requireNonNull(employeeRepository);
         this.messageRepository = Objects.requireNonNull(messageRepository);
         this.imageRepository = Objects.requireNonNull(imageRepository);
@@ -52,14 +52,19 @@ public class EmployeeService {
 
 
     @Transactional
-    public Optional<Employee> DeleteEmployeeById(int id) {
-        Employee employee = employeeRepository.findById((long) id).get();
+    public Optional<Employee> DeleteEmployeeById(long id) {
+        Employee employee = employeeRepository.findById(id).get();
         if (employee.isEmpty()) {
             return Optional.empty();
         }
+        List<Message> messageList = employee.getMessages();
+        messageRepository.deleteAll(messageList);
+        var image = employee.getImagedata();
+        imageRepository.delete(image);
         employeeRepository.deleteById((long) id);
         return Optional.of(employee);
     }
+
     @Transactional
     public Optional<List<Message>> getMessagesFromEmployee(int userId) {
         var employee = employeeRepository.findById((long) userId);
@@ -68,6 +73,7 @@ public class EmployeeService {
         }
         return Optional.of(employee.get().getMessages().stream().toList());
     }
+
     @Transactional
     public Optional<Message> getMessageById(int messageId) {
         if (messageRepository.findById((long) messageId).isEmpty()) {
@@ -75,32 +81,47 @@ public class EmployeeService {
         }
         return messageRepository.findById((long) messageId);
     }
+
     @Transactional
-    public Optional<Message> saveMessage(Message message) {
+    public Optional<Message> saveMessage(Message message, int userId) {
+        if (message.getMessage().isEmpty()) {
+            return Optional.empty();
+        }
         messageRepository.save(message);
-        return Optional.empty();
+        Employee employee = employeeRepository.findById((long) userId).get();
+        employee.addMessageToMessages(message);
+        employeeRepository.save(employee);
+        return Optional.of(message);
     }
+
     @Transactional
-    public Optional<Message> deleteMessage(int messageId) {
+    public Optional<Message> deleteMessage(long messageId) {
         Message message = messageRepository.findById((long) messageId).get();
         if (message.getMessage().isEmpty()) {
             return Optional.empty();
         }
-        messageRepository.deleteById((long) messageId);
+        Employee employee = (Employee) employeeRepository.findAll().stream().filter(employee1 -> employee1.getMessages().contains(message));
+        messageRepository.deleteById(messageId);
         return Optional.of(message);
     }
+
     @Transactional
-    public Optional<String> GetImageData(int userId){
-       return Optional.of(employeeRepository.findById((long) userId).get().getImagedata().getImageData());
+    public Optional<String> GetImageData(int userId) {
+        return Optional.of(employeeRepository.findById((long) userId).get().getImagedata().getImageData());
     }
+
     @Transactional
-    public Optional<String>saveImage(String imageData){
+    public Optional<String> saveUsersImage(String imageData, long userId) {
         if (imageData.isEmpty()) {
             return Optional.empty();
         }
-        imageRepository.save(new Image(imageData));
+        Image image = new Image(imageData);
+        image = imageRepository.save(image);
+        Employee employee = employeeRepository.findById(userId).get();
+        employee.setImagedata(image);
+        employeeRepository.save(employee);
         return Optional.of(imageData);
     }
 
+
 }
-//}.stream().filter(message -> message.getId() == messageId).findFirst();

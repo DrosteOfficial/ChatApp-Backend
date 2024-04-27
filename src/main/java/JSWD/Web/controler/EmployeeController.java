@@ -82,9 +82,9 @@ public class EmployeeController {
         return ResponseEntity.ok(imageData);
     }
 
-    @PostMapping("/employee/{id}/putImage")
-    public ResponseEntity<Employee> putEmployeeImage(@PathVariable int id, @RequestBody MultipartFile imageData) throws IOException {
-        if (employeeService.GetEmployeeById(id).isEmpty()) {
+    @PostMapping("/employee/{userId}/saveImage")
+    public ResponseEntity<Employee> saveEmployeeImage(@PathVariable int userId, @RequestBody MultipartFile imageData) throws IOException {
+        if (employeeService.GetEmployeeById(userId).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         if (imageData.isEmpty()) {
@@ -94,9 +94,10 @@ public class EmployeeController {
 
         // Encode the byte array to a Base64 string
         String base64Image = Base64.getEncoder().encodeToString(fileBytes);
-        employeeService.GetEmployeeById(id).get().getImagedata().setImageData(base64Image);
-        return ResponseEntity.ok(employeeService.GetEmployeeById(id).get());
+        employeeService.saveUsersImage(base64Image, userId);
+        return ResponseEntity.ok(employeeService.GetEmployeeById(userId).get());
     }
+
     @DeleteMapping("/employee/{id}/deleteImage")
     public ResponseEntity<Employee> deleteEmployeeImage(@PathVariable int id) {
         if (employeeService.GetEmployeeById(id).isEmpty()) {
@@ -107,12 +108,21 @@ public class EmployeeController {
     }
 
     @PostMapping("/employee/{employeeId}/addMessage")
-    public ResponseEntity<Employee> saveMessage( @RequestBody Message message, @PathVariable int employeeId) {
+    public ResponseEntity<Employee> saveMessage(@RequestBody Message message, @PathVariable int employeeId) {
         if (employeeService.GetEmployeeById(employeeId).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
-        employeeService.GetEmployeeById(employeeId).get().getMessages().add(message);
+        employeeService.saveMessage(message, employeeId);
         return ResponseEntity.ok(employeeService.GetEmployeeById(employeeId).get());
     }
+
+    @PostMapping("/employee/{employeeId}/deleteMessage/{messageId}")
+    public ResponseEntity<Employee> deleteMessage(@PathVariable int employeeId, @PathVariable int messageId) {
+        var message = employeeService.getMessageById(messageId);
+        var employee = employeeService.GetEmployeeById(employeeId).get();
+        employee.getMessages().removeAll(message.stream().toList());
+        return ResponseEntity.ok(employee);
+    }
+
+
 }

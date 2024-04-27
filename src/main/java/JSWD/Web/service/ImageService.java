@@ -5,6 +5,9 @@ import JSWD.Web.model.Image;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.Base64;
 import java.util.Optional;
 @Service
@@ -25,13 +28,16 @@ public class ImageService {
         }
     }
     @Transactional
-    public Optional<String> SaveImage(Image imageData) {
-        if (imageData.getImageData().isEmpty()) {
+    public Optional<String> SaveImage(MultipartFile file) throws IOException {
+        byte[] fileBytes = file.getBytes();
+
+        // Encode the byte array to a Base64 string
+        String base64Image = Base64.getEncoder().encodeToString(fileBytes);
+        if (base64Image.isEmpty()) {
             return Optional.empty();
         }
-        imageRepository.save(imageData);
-        return Optional.of(imageData.getImageData());
-    }
+        imageRepository.save(new Image(base64Image));
 
-    // Base64.Decoder decoder = Base64.getDecoder();
+        return Optional.of(base64Image);
+    }
 }

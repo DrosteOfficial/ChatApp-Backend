@@ -103,4 +103,7 @@ public class Employee {
     public void setImagedata(Image imagedata) {
         this.imagedata = imagedata;
     }
+    public void addMessageToMessages(Message message){
+        this.messages.add(message);
+    }
 }
