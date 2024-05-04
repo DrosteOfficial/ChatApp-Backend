@@ -1,7 +1,6 @@
 package JSWD.Web.model;
 
 import jakarta.persistence.*;
-import org.springframework.context.annotation.Lazy;
 
 @Entity
 @Table(name = "image")
@@ -15,24 +14,24 @@ public class Image {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id")
-    private Employee employee;
+    private UserDetails userDetails;
 
     public Image(int id) {
         this.id = id;
     }
 
-    public Image(int id, Employee employee) {
+    public Image(int id, UserDetails userDetails) {
         this.id = id;
-        this.employee = employee;
+        this.userDetails = userDetails;
     }
 
     public Image(String imageData) {
         this.imageData = imageData;
     }
 
-    public Image(int id, Employee employee, String imageData) {
+    public Image(int id, UserDetails userDetails, String imageData) {
         this.id = id;
-        this.employee = employee;
+        this.userDetails = userDetails;
         this.imageData = imageData;
     }
 
@@ -58,11 +57,11 @@ public class Image {
         this.imageData = imageData;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public UserDetails getEmployee() {
+        return userDetails;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setEmployee(UserDetails userDetails) {
+        this.userDetails = userDetails;
     }
 }

@@ -1,8 +1,7 @@
 package JSWD.Web.service;
 
-import JSWD.Web.dao.IImageRepository;
+import JSWD.Web.repositories.IImageRepository;
 import JSWD.Web.model.Image;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;

@@ -1,37 +1,36 @@
 package JSWD.Web.service;
 
-import JSWD.Web.dao.IEmployeeRepository;
-import JSWD.Web.dao.IImageRepository;
-import JSWD.Web.dao.IMessageRepository;
-import JSWD.Web.model.Employee;
+import JSWD.Web.repositories.UserDetailsRepository;
+import JSWD.Web.repositories.IImageRepository;
+import JSWD.Web.repositories.IMessageRepository;
+import JSWD.Web.model.UserDetails;
 import JSWD.Web.model.Image;
 import JSWD.Web.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class EmployeeService {
+public class UserDetailsService {
     @Autowired
-    IEmployeeRepository employeeRepository;
+    UserDetailsRepository employeeRepository;
     @Autowired
     IMessageRepository messageRepository;
     @Autowired
     IImageRepository imageRepository;
 
-    public EmployeeService(IEmployeeRepository employeeRepository, IMessageRepository messageRepository, IImageRepository imageRepository) {
+    public UserDetailsService(UserDetailsRepository employeeRepository, IMessageRepository messageRepository, IImageRepository imageRepository) {
         this.employeeRepository = Objects.requireNonNull(employeeRepository);
         this.messageRepository = Objects.requireNonNull(messageRepository);
         this.imageRepository = Objects.requireNonNull(imageRepository);
     }
 
     @Transactional
-    public Optional<List<Employee>> getAllEmployees() {
+    public Optional<List<UserDetails>> getAllEmployees() {
         if (employeeRepository.findAll().isEmpty()) {
             return Optional.empty();
         }
@@ -39,30 +38,30 @@ public class EmployeeService {
     }
 
     @Transactional
-    public Optional<Employee> GetEmployeeById(int employeeId) {
+    public Optional<UserDetails> GetEmployeeById(int employeeId) {
 
         return employeeRepository.findById((long) employeeId);
     }
 
     @Transactional
-    public Optional<Employee> SaveEmployee(Employee employee) {
-        employeeRepository.save(employee);
+    public Optional<UserDetails> SaveEmployee(UserDetails userDetails) {
+        employeeRepository.save(userDetails);
         return Optional.empty();
     }
 
 
     @Transactional
-    public Optional<Employee> DeleteEmployeeById(long id) {
-        Employee employee = employeeRepository.findById(id).get();
-        if (employee.isEmpty()) {
+    public Optional<UserDetails> DeleteEmployeeById(long id) {
+        UserDetails userDetails = employeeRepository.findById(id).get();
+        if (userDetails.isEmpty()) {
             return Optional.empty();
         }
-        List<Message> messageList = employee.getMessages();
+        List<Message> messageList = userDetails.getMessages();
         messageRepository.deleteAll(messageList);
-        var image = employee.getImagedata();
+        var image = userDetails.getImagedata();
         imageRepository.delete(image);
         employeeRepository.deleteById((long) id);
-        return Optional.of(employee);
+        return Optional.of(userDetails);
     }
 
     @Transactional
@@ -88,9 +87,9 @@ public class EmployeeService {
             return Optional.empty();
         }
         messageRepository.save(message);
-        Employee employee = employeeRepository.findById((long) userId).get();
-        employee.addMessageToMessages(message);
-        employeeRepository.save(employee);
+        UserDetails userDetails = employeeRepository.findById((long) userId).get();
+        userDetails.addMessageToMessages(message);
+        employeeRepository.save(userDetails);
         return Optional.of(message);
     }
 
@@ -100,7 +99,7 @@ public class EmployeeService {
         if (message.getMessage().isEmpty()) {
             return Optional.empty();
         }
-        Employee employee = (Employee) employeeRepository.findAll().stream().filter(employee1 -> employee1.getMessages().contains(message));
+        UserDetails userDetails = (UserDetails) employeeRepository.findAll().stream().filter(userDetails1 -> userDetails1.getMessages().contains(message));
         messageRepository.deleteById(messageId);
         return Optional.of(message);
     }
@@ -117,11 +116,19 @@ public class EmployeeService {
         }
         Image image = new Image(imageData);
         image = imageRepository.save(image);
-        Employee employee = employeeRepository.findById(userId).get();
-        employee.setImagedata(image);
-        employeeRepository.save(employee);
+        UserDetails userDetails = employeeRepository.findById(userId).get();
+        userDetails.setImagedata(image);
+        employeeRepository.save(userDetails);
         return Optional.of(imageData);
     }
+//    @Transactional
+//    public Optional<UserDetails> GetEmployeeByName(String name) {
+//        if (employeeRepository.findAll().stream().filter(userDetails -> userDetails.getName().equals(name)).toList().isEmpty()) {
+//            return Optional.empty();
+//        }
+//         return Optional.of(employeeRepository.findAll().stream().filter(userDetails -> userDetails.getName().equals(name)).toList().get(0));
+//
+//    }
 
 
 }

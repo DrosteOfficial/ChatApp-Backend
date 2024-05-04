@@ -1,6 +1,6 @@
 package JSWD.Web.service;
 
-import JSWD.Web.dao.IMessageRepository;
+import JSWD.Web.repositories.IMessageRepository;
 import JSWD.Web.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
