@@ -1,9 +1,9 @@
-package JSWD.Web.model.security;
+package JSWD.Web.model.security.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-import javax.validation.constraints.Size;
 import java.time.Instant;
 
 @Entity
@@ -28,6 +28,7 @@ public class UserCredentials {
     public UserCredentials(String password, Instant createTimestamp) {
         this.password = password;
         this.createTimestamp = createTimestamp;
+        this.active = true;
     }
 
     public UserCredentials(String password, boolean active, boolean locked, Instant accountExpireDate, Instant credentialsExpireDate, Instant createTimestamp) {

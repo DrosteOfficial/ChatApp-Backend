@@ -3,7 +3,7 @@ package JSWD.Web.service;
 import JSWD.Web.repositories.UserDetailsRepository;
 import JSWD.Web.repositories.IImageRepository;
 import JSWD.Web.repositories.IMessageRepository;
-import JSWD.Web.model.UserDetails;
+import JSWD.Web.model.security.user.UserInformation;
 import JSWD.Web.model.Image;
 import JSWD.Web.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class UserDetailsService {
     }
 
     @Transactional
-    public Optional<List<UserDetails>> getAllEmployees() {
+    public Optional<List<UserInformation>> getAllEmployees() {
         if (employeeRepository.findAll().isEmpty()) {
             return Optional.empty();
         }
@@ -38,30 +38,30 @@ public class UserDetailsService {
     }
 
     @Transactional
-    public Optional<UserDetails> GetEmployeeById(int employeeId) {
+    public Optional<UserInformation> GetEmployeeById(int employeeId) {
 
         return employeeRepository.findById((long) employeeId);
     }
 
     @Transactional
-    public Optional<UserDetails> SaveEmployee(UserDetails userDetails) {
-        employeeRepository.save(userDetails);
+    public Optional<UserInformation> SaveEmployee(UserInformation userInformation) {
+        employeeRepository.save(userInformation);
         return Optional.empty();
     }
 
 
     @Transactional
-    public Optional<UserDetails> DeleteEmployeeById(long id) {
-        UserDetails userDetails = employeeRepository.findById(id).get();
-        if (userDetails.isEmpty()) {
+    public Optional<UserInformation> DeleteEmployeeById(long id) {
+        UserInformation userInformation = employeeRepository.findById(id).get();
+        if (userInformation.isEmpty()) {
             return Optional.empty();
         }
-        List<Message> messageList = userDetails.getMessages();
+        List<Message> messageList = userInformation.getMessages();
         messageRepository.deleteAll(messageList);
-        var image = userDetails.getImagedata();
+        var image = userInformation.getImagedata();
         imageRepository.delete(image);
         employeeRepository.deleteById((long) id);
-        return Optional.of(userDetails);
+        return Optional.of(userInformation);
     }
 
     @Transactional
@@ -87,9 +87,9 @@ public class UserDetailsService {
             return Optional.empty();
         }
         messageRepository.save(message);
-        UserDetails userDetails = employeeRepository.findById((long) userId).get();
-        userDetails.addMessageToMessages(message);
-        employeeRepository.save(userDetails);
+        UserInformation userInformation = employeeRepository.findById((long) userId).get();
+        userInformation.addMessageToMessages(message);
+        employeeRepository.save(userInformation);
         return Optional.of(message);
     }
 
@@ -99,7 +99,7 @@ public class UserDetailsService {
         if (message.getMessage().isEmpty()) {
             return Optional.empty();
         }
-        UserDetails userDetails = (UserDetails) employeeRepository.findAll().stream().filter(userDetails1 -> userDetails1.getMessages().contains(message));
+        UserInformation userInformation = (UserInformation) employeeRepository.findAll().stream().filter(userDetails1 -> userDetails1.getMessages().contains(message));
         messageRepository.deleteById(messageId);
         return Optional.of(message);
     }
@@ -116,9 +116,9 @@ public class UserDetailsService {
         }
         Image image = new Image(imageData);
         image = imageRepository.save(image);
-        UserDetails userDetails = employeeRepository.findById(userId).get();
-        userDetails.setImagedata(image);
-        employeeRepository.save(userDetails);
+        UserInformation userInformation = employeeRepository.findById(userId).get();
+        userInformation.setImagedata(image);
+        employeeRepository.save(userInformation);
         return Optional.of(imageData);
     }
 //    @Transactional

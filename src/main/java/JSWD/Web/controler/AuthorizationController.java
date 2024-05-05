@@ -1,9 +1,9 @@
 package JSWD.Web.controler;
 
-import JSWD.Web.comunication.LoginRequest;
-import JSWD.Web.comunication.LogoutRequest;
-import JSWD.Web.comunication.RefreshRequest;
-import JSWD.Web.comunication.RegisterRequest;
+import JSWD.Web.model.comunication.LoginRequest;
+import JSWD.Web.model.comunication.LogoutRequest;
+import JSWD.Web.model.comunication.RefreshRequest;
+import JSWD.Web.model.comunication.RegisterRequest;
 import JSWD.Web.service.security.AuthorizationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

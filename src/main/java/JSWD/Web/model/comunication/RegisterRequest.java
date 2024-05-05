@@ -1,4 +1,4 @@
-package JSWD.Web.comunication;
+package JSWD.Web.model.comunication;
 
 import java.time.Instant;
 

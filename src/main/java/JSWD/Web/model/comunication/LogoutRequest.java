@@ -1,6 +1,5 @@
-package JSWD.Web.comunication;
+package JSWD.Web.model.comunication;
 
-import JSWD.Web.model.security.RegularToken;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 

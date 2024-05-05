@@ -10,7 +10,7 @@ public class Roles {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
-    private ERole name;
+    private Role name;
 
     private int accessLevel;
 
@@ -18,7 +18,7 @@ public class Roles {
 
     }
 
-    public Roles(ERole name) {
+    public Roles(Role name) {
         this.name = name;
     }
 
@@ -30,17 +30,11 @@ public class Roles {
         this.id = id;
     }
 
-    public ERole getName() {
+    public Role getName() {
         return name;
     }
 
-    public void setName(ERole name) {
+    public void setName(Role name) {
         this.name = name;
-    }
-
-    public enum ERole {
-        ROLE_USER,
-        ROLE_MODERATOR,
-        ROLE_ADMIN
     }
 }

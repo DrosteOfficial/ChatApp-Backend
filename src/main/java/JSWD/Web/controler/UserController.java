@@ -1,6 +1,6 @@
 package JSWD.Web.controler;
 
-import JSWD.Web.model.UserDetails;
+import JSWD.Web.model.security.user.UserInformation;
 import JSWD.Web.model.Message;
 import JSWD.Web.service.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping("/employees")
-    public ResponseEntity<List<UserDetails>> getAllEmployees() {
+    public ResponseEntity<List<UserInformation>> getAllEmployees() {
         if (userDetailsService.getAllEmployees().isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @GetMapping("/employee/{id}")
-    public ResponseEntity<UserDetails> getEmployeeById(@PathVariable int id) {
+    public ResponseEntity<UserInformation> getEmployeeById(@PathVariable int id) {
 
         if (userDetailsService.GetEmployeeById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -44,16 +44,16 @@ public class UserController {
     }
 
     @PostMapping("/employee/save")
-    public ResponseEntity<UserDetails> saveEmployee(@RequestBody UserDetails userDetails) {
-        if (userDetailsService.SaveEmployee(userDetails).isEmpty()) {
+    public ResponseEntity<UserInformation> saveEmployee(@RequestBody UserInformation userInformation) {
+        if (userDetailsService.SaveEmployee(userInformation).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(userDetails);
+        return ResponseEntity.ok(userInformation);
 
     }
 
     @DeleteMapping("/employee/{id}/deleteEmployee")
-    public ResponseEntity<UserDetails> deleteEmployee(@PathVariable int id) {
+    public ResponseEntity<UserInformation> deleteEmployee(@PathVariable int id) {
         if (userDetailsService.DeleteEmployeeById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -62,13 +62,13 @@ public class UserController {
 
     @GetMapping("/employee/{id}/getImage")
     public ResponseEntity<MultipartFile> getEmployeeImage(@PathVariable int id) {
-        Optional<UserDetails> employeeOptional = userDetailsService.GetEmployeeById(id);
+        Optional<UserInformation> employeeOptional = userDetailsService.GetEmployeeById(id);
         if (employeeOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        UserDetails userDetails = employeeOptional.get();
-        String base64Image = userDetails.getImagedata().getImageData();
+        UserInformation userInformation = employeeOptional.get();
+        String base64Image = userInformation.getImagedata().getImageData();
 
         // Decode the Base64 string to a byte array
         byte[] fileBytes = Base64.getDecoder().decode(base64Image);
@@ -80,7 +80,7 @@ public class UserController {
     }
 
     @PostMapping("/employee/{userId}/saveImage")
-    public ResponseEntity<UserDetails> saveEmployeeImage(@PathVariable int userId, @RequestBody MultipartFile imageData) throws IOException {
+    public ResponseEntity<UserInformation> saveEmployeeImage(@PathVariable int userId, @RequestBody MultipartFile imageData) throws IOException {
         if (userDetailsService.GetEmployeeById(userId).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -96,7 +96,7 @@ public class UserController {
     }
 
     @DeleteMapping("/employee/{id}/deleteImage")
-    public ResponseEntity<UserDetails> deleteEmployeeImage(@PathVariable int id) {
+    public ResponseEntity<UserInformation> deleteEmployeeImage(@PathVariable int id) {
         if (userDetailsService.GetEmployeeById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -105,7 +105,7 @@ public class UserController {
     }
 
     @PostMapping("/employee/{employeeId}/addMessage")
-    public ResponseEntity<UserDetails> saveMessage(@RequestBody Message message, @PathVariable int employeeId) {
+    public ResponseEntity<UserInformation> saveMessage(@RequestBody Message message, @PathVariable int employeeId) {
         if (userDetailsService.GetEmployeeById(employeeId).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -114,7 +114,7 @@ public class UserController {
     }
 
     @PostMapping("/employee/{employeeId}/deleteMessage/{messageId}")
-    public ResponseEntity<UserDetails> deleteMessage(@PathVariable int employeeId, @PathVariable int messageId) {
+    public ResponseEntity<UserInformation> deleteMessage(@PathVariable int employeeId, @PathVariable int messageId) {
         var message = userDetailsService.getMessageById(messageId);
         var employee = userDetailsService.GetEmployeeById(employeeId).get();
         employee.getMessages().removeAll(message.stream().toList());

@@ -1,7 +1,7 @@
 package JSWD.Web.repositories.SecurityAuth;
 
-import JSWD.Web.model.security.RegularToken;
-import JSWD.Web.model.security.UserCredentials;
+import JSWD.Web.model.security.token.RegularToken;
+import JSWD.Web.model.security.user.UserCredentials;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;

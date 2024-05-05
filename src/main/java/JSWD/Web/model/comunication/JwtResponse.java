@@ -1,18 +1,20 @@
-package JSWD.Web.comunication;
+package JSWD.Web.model.comunication;
 
 import java.util.List;
 import java.util.Objects;
 
 public class JwtResponse {
     private String token;
+    private  String refreshToken;
     private String type;
     private long id;
     private String username;
     private String email;
     private List<String> roles;
 
-    public JwtResponse(String token, String type, long id, String username, String email, List<String> roles) {
+    public JwtResponse(String token,String refreshToken,  String type, long id, String username, String email, List<String> roles) {
         this.token = token;
+        this.refreshToken = refreshToken;
         this.type = type;
         this.id = id;
         this.username = username;
@@ -68,23 +70,32 @@ public class JwtResponse {
         this.roles = roles;
     }
 
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         JwtResponse that = (JwtResponse) o;
-        return id == that.id && Objects.equals(token, that.token) && Objects.equals(type, that.type) && Objects.equals(username, that.username) && Objects.equals(email, that.email) && Objects.equals(roles, that.roles);
+        return id == that.id && Objects.equals(token, that.token) && Objects.equals(refreshToken, that.refreshToken) && Objects.equals(type, that.type) && Objects.equals(username, that.username) && Objects.equals(email, that.email) && Objects.equals(roles, that.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(token, type, id, username, email, roles);
+        return Objects.hash(token, refreshToken, type, id, username, email, roles);
     }
 
     @Override
     public String toString() {
         return "JwtResponse{" +
                 "token='" + token + '\'' +
+                ", refreshToken='" + refreshToken + '\'' +
                 ", type='" + type + '\'' +
                 ", id=" + id +
                 ", username='" + username + '\'' +

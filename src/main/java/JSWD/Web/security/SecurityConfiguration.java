@@ -2,7 +2,7 @@ package JSWD.Web.security;
 
 import JSWD.Web.security.jwt.AuthEntryPointJwt;
 import JSWD.Web.security.jwt.AuthTokenFilter;
-import JSWD.Web.service.security.UserService;
+import JSWD.Web.service.security.UserDetailsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +28,11 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
-
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
 
-
     @Autowired
-    private UserService userService;
+    private UserDetailsServiceImpl userDetailsServiceImpl;
+
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
 
@@ -46,7 +45,7 @@ public class SecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecu
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
-        authProvider.setUserDetailsService(userService);
+        authProvider.setUserDetailsService(userDetailsServiceImpl);
         authProvider.setPasswordEncoder(passwordEncoder());
 
         return authProvider;

@@ -1,5 +1,6 @@
-package JSWD.Web.model.security;
+package JSWD.Web.model.security.token;
 
+import JSWD.Web.model.security.user.UserCredentials;
 import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;

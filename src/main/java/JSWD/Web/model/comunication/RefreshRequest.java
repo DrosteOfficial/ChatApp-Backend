@@ -1,4 +1,4 @@
-package JSWD.Web.comunication;
+package JSWD.Web.model.comunication;
 
 public class RefreshRequest {
     private String refreshToken;

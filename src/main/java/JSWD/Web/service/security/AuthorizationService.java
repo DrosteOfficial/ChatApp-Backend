@@ -1,12 +1,16 @@
 package JSWD.Web.service.security;
 
-import JSWD.Web.comunication.*;
 import JSWD.Web.exceptions.RefreshTokenNotFoundException;
 import JSWD.Web.exceptions.RegularTokenNotFoundException;
 import JSWD.Web.exceptions.TokenInvalidException;
 import JSWD.Web.exceptions.TokenRevokedException;
-import JSWD.Web.model.UserDetails;
+import JSWD.Web.model.security.user.UserInformation;
+import JSWD.Web.model.comunication.*;
 import JSWD.Web.model.security.*;
+import JSWD.Web.model.security.token.RefreshToken;
+import JSWD.Web.model.security.token.RegularToken;
+import JSWD.Web.model.security.user.User;
+import JSWD.Web.model.security.user.UserCredentials;
 import JSWD.Web.repositories.SecurityAuth.*;
 import JSWD.Web.repositories.UserDetailsRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,29 +29,39 @@ import org.springframework.security.core.GrantedAuthority;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 @Service
 public class AuthorizationService {
-  @Autowired
+    @Autowired
     private AuthenticationManager authenticationManager;
+
     @Autowired
     private UserDetailsRepository userDetailsRepository;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
     @Autowired
     private RegularTokenRepository regularTokenRepository;
+
     @Autowired
     private UserCredentialsRepository userCredentialsRepository;
+
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private RolesRepository rolesRepository;
+
     @Autowired
     PasswordEncoder encoder;
+
     @Autowired
     private JwtService jwtService;
+
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
     public AuthorizationService authorizationService;
@@ -60,7 +74,7 @@ public class AuthorizationService {
     }
 
     String jwt = jwtService.parseJwt(request);
-    User userDetails = userRepository.findByUsername(jwtService.getUserNameFromJwtToken(jwt)).get();
+    var userDetails = userDetailsService.loadUserByUsername(jwtService.getUserNameFromJwtToken(jwt));
     if (!jwtService.isTokenValid(jwt, userDetails, request)) {
       throw new TokenInvalidException();
     }
@@ -122,10 +136,10 @@ Authentication authentication = authenticationManager.authenticate(
     SecurityContextHolder.getContext().setAuthentication(authentication);
     String jwt = jwtService.generateToken(authentication, request);
 
-    User userDetails = (User) authentication.getPrincipal();
+    var userDetails = (UserDetailsImpl) authentication.getPrincipal();
     String refresh = jwtService.generateToken(userDetails, request, 10);
-    List<String> roles = userDetails.getRole().stream()
-            .map(role -> role.getName().name())
+    List<String> roles = userDetails.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
 
     Optional<User> user = userRepository.findByUsername(login);
@@ -140,6 +154,7 @@ Authentication authentication = authenticationManager.authenticate(
     return ResponseEntity.ok(new JwtResponse(
             jwt,
             refresh,
+            "Bearer",
             user.get().getId(),
             userDetails.getUsername(),
             userDetails.getEmail(),
@@ -156,7 +171,7 @@ Authentication authentication = authenticationManager.authenticate(
       return ResponseEntity.badRequest().build();
     }
 
-    User userDetails = userRepository.findByUsername(username).get();
+    var userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(username);
     if (!jwtService.isTokenValid(refreshRequest.getRefreshToken(), userDetails, request)) {
       return ResponseEntity.badRequest().build();
     }
@@ -174,7 +189,6 @@ Authentication authentication = authenticationManager.authenticate(
     if (realToken.get().isRevoked()) {
       return ResponseEntity.badRequest().build();
     }
-
 
     List<String> roles = userDetails.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
@@ -218,6 +232,7 @@ Authentication authentication = authenticationManager.authenticate(
     return ResponseEntity.ok(new JwtResponse(
             jwt,
             newRefresh,
+            "Bearer",
             user.get().getId(),
             userDetails.getUsername(),
             userDetails.getEmail(),
@@ -242,24 +257,29 @@ Authentication authentication = authenticationManager.authenticate(
             Instant.now()
     );
 
-    if (!rolesRepository.existsByName(Roles.ERole.ROLE_USER)){
-      rolesRepository.save(new Roles(Roles.ERole.ROLE_USER));
+    if (!rolesRepository.existsByName(Role.ROLE_USER)){
+      rolesRepository.save(new Roles(Role.ROLE_USER));
     }
 
-  UserDetails userDetails = new UserDetails();
-  Roles roles = rolesRepository.findByName(Roles.ERole.ROLE_USER);
+  var userInformation = new UserInformation();
+  var roles = rolesRepository.findByName(Role.ROLE_USER);
+
+  if (roles.isEmpty()) {
+    return ResponseEntity.badRequest().build();
+  }
+
+    userCredentialsRepository.save(userCredentials);
+    userDetailsRepository.save(userInformation);
+
     User user = new User(
             signUpRequest.getUsername().toLowerCase(),
             signUpRequest.getPassword(),
             signUpRequest.getEmail(),
-            userDetails,
+            userInformation,
             userCredentials,
-            roles
-
+            roles.get()
     );
 
-    userCredentialsRepository.save(userCredentials);
-    userDetailsRepository.save(userDetails);
     userRepository.save(user);
 
     return ResponseEntity.ok(new MessageResponse("User " + signUpRequest.getUsername() + " has been registered!"));

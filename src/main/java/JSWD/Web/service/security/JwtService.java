@@ -1,7 +1,6 @@
 package JSWD.Web.service.security;
 
-import JSWD.Web.model.security.User;
-import JSWD.Web.model.security.RegularToken;
+import JSWD.Web.model.security.token.RegularToken;
 import JSWD.Web.repositories.SecurityAuth.RefreshTokenRepository;
 import JSWD.Web.repositories.SecurityAuth.RegularTokenRepository;
 import io.jsonwebtoken.*;
@@ -13,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -57,7 +57,7 @@ public class JwtService {
         return this.generateJwtToken(claims, authentication, 1);
     }
 
-    public String generateToken(User userDetails, HttpServletRequest request) {
+    public String generateToken(UserDetails userDetails, HttpServletRequest request) {
         final Map<String, Object> claims = new HashMap<>();
 
         final String ua = this.getUserAgent(request);
@@ -69,7 +69,7 @@ public class JwtService {
         return this.generateJwtToken(claims, userDetails, 1);
     }
 
-    public String generateToken(User userDetails, HttpServletRequest request, int timeMultiplayer) {
+    public String generateToken(UserDetails userDetails, HttpServletRequest request, int timeMultiplayer) {
         final Map<String, Object> claims = new HashMap<>();
 
         final String ua = this.getUserAgent(request);
@@ -83,17 +83,17 @@ public class JwtService {
 
     public String generateJwtToken(Map<String, Object> extraClaims, Authentication  authentication, int timeMultiplayer) {
 
-        User userPrincipal = (User) authentication.getPrincipal();
+        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
 
         return this.generateJwtToken(extraClaims, userPrincipal, timeMultiplayer);
     }
 
-    public String generateJwtToken(Map<String, Object> extraClaims, User userPrincipal, int timeMultiplayer) {
+    public String generateJwtToken(Map<String, Object> extraClaims, UserDetails userPrincipal, int timeMultiplayer) {
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs * timeMultiplayer))
+                .setExpiration(new Date((new Date()).getTime() + (long) jwtExpirationMs * timeMultiplayer))
                 .signWith(SignatureAlgorithm.HS256, key())
                 .compact();
     }
@@ -124,13 +124,14 @@ public class JwtService {
     public Claims extractClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(key())
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
 
-    public boolean isTokenValid(String authToken, User userDetails, HttpServletRequest request) {
+    public boolean isTokenValid(String authToken, UserDetails userDetails, HttpServletRequest request) {
         try {
-            Jwt token = Jwts.parser().setSigningKey(key()).parseClaimsJws(authToken);
+            Jwt token = Jwts.parser().setSigningKey(key()).build().parse(authToken);
 
             final String ua = this.getUserAgent(request);
             final String ip = this.getClientIp(request);

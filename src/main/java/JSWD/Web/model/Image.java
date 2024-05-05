@@ -1,5 +1,6 @@
 package JSWD.Web.model;
 
+import JSWD.Web.model.security.user.UserInformation;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,24 +15,24 @@ public class Image {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id")
-    private UserDetails userDetails;
+    private UserInformation userInformation;
 
     public Image(int id) {
         this.id = id;
     }
 
-    public Image(int id, UserDetails userDetails) {
+    public Image(int id, UserInformation userInformation) {
         this.id = id;
-        this.userDetails = userDetails;
+        this.userInformation = userInformation;
     }
 
     public Image(String imageData) {
         this.imageData = imageData;
     }
 
-    public Image(int id, UserDetails userDetails, String imageData) {
+    public Image(int id, UserInformation userInformation, String imageData) {
         this.id = id;
-        this.userDetails = userDetails;
+        this.userInformation = userInformation;
         this.imageData = imageData;
     }
 
@@ -57,11 +58,11 @@ public class Image {
         this.imageData = imageData;
     }
 
-    public UserDetails getEmployee() {
-        return userDetails;
+    public UserInformation getEmployee() {
+        return userInformation;
     }
 
-    public void setEmployee(UserDetails userDetails) {
-        this.userDetails = userDetails;
+    public void setEmployee(UserInformation userInformation) {
+        this.userInformation = userInformation;
     }
 }

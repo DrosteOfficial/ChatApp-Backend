@@ -1,7 +1,7 @@
 package JSWD.Web.repositories.SecurityAuth;
 
-import JSWD.Web.model.security.User;
-import JSWD.Web.model.security.UserCredentials;
+import JSWD.Web.model.security.user.User;
+import JSWD.Web.model.security.user.UserCredentials;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

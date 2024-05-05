@@ -1,22 +1,21 @@
-package JSWD.Web.model;
+package JSWD.Web.model.security.user;
 
+import JSWD.Web.model.Image;
+import JSWD.Web.model.Message;
 import jakarta.persistence.*;
-import org.springframework.security.core.GrantedAuthority;
 
-import java.sql.Date;
-import java.time.Instant;
 import java.util.List;
 
 @Entity
-@Table(name = "UserDetails")
-public class UserDetails {
+@Table(name = "user_information")
+public class UserInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private int id;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "Employee_messege", joinColumns = @JoinColumn(name = "employee_id"), inverseJoinColumns = @JoinColumn(name = "message_id"))
+    @JoinTable(name = "employee_messege", joinColumns = @JoinColumn(name = "employee_id"), inverseJoinColumns = @JoinColumn(name = "message_id"))
     private List<Message> messages;
 
     @OneToOne
@@ -24,7 +23,7 @@ public class UserDetails {
     private Image imagedata;
 
 
-    public UserDetails() {
+    public UserInformation() {
     }
 
 
