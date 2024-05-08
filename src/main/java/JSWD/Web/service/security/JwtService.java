@@ -173,7 +173,7 @@ public class JwtService {
 
     public boolean isTokenExpired(String token) {
         try {
-            return this.extractClaim(token, Claims::getExpiration).before(new Date());
+                return this.extractClaim(token, Claims::getExpiration).before(new Date());
         } catch (Exception e) {
             logger.warn("Error parsing token", e);
 

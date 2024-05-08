@@ -13,7 +13,7 @@ public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @JoinTable(name = "user_id")
+    @JoinColumn(name = "user_id")
     private UserCredentials userCredentials;
 
 
