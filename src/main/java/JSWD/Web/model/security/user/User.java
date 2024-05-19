@@ -129,4 +129,24 @@ public class User {
     public void setUser(UserInformation user) {
         this.userInformation = user;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<Roles> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Roles> roles) {
+        this.roles = roles;
+    }
+
+    public UserInformation getUserInformation() {
+        return userInformation;
+    }
+
+    public void setUserInformation(UserInformation userInformation) {
+        this.userInformation = userInformation;
+    }
 }

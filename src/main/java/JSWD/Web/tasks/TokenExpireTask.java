@@ -61,7 +61,7 @@ public class TokenExpireTask {
             return;
         }
         foundTokens.forEach(token -> {
-            if(!token.isExpired() && jwtService.isTokenExpired(token.getToken())){
+            if(token.isRevoked() && jwtService.isTokenExpired(token.getToken())){
                 log.info("Token revoked: " + token.getToken());
                 token.setExpired(true);
                 token.setExpiredTime(Instant.now());

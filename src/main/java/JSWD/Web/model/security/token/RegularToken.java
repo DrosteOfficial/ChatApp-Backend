@@ -3,7 +3,7 @@ package JSWD.Web.model.security.token;
 import JSWD.Web.model.security.user.UserCredentials;
 import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.*;
-import org.antlr.v4.runtime.misc.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.Instant;
 import java.util.Objects;

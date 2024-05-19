@@ -1,6 +1,7 @@
 package JSWD.Web.controler;
 
-import JSWD.Web.model.Message;
+import JSWD.Web.model.chatSpecific.Message;
+import JSWD.Web.model.comunication.JsonPayload;
 import JSWD.Web.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,14 +27,16 @@ public class MessageController {
     }
     @GetMapping("/get")
     public ResponseEntity<List<Message>> getmessages() {
+
         if (messageService.getMessages().isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(messageService.getMessages().get());
     }
+
     @PostMapping("/save")
-    public void saveMessage(@RequestBody Message message ) {
-        messageService.saveMessage(message);
+    public void saveMessage(@RequestBody JsonPayload message ) {
+        messageService.saveMess(message);
     }
 
 }

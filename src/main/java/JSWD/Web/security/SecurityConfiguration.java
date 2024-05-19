@@ -70,7 +70,9 @@ public class SecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecu
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/signin").permitAll()
                         .requestMatchers("/api/auth/signup").permitAll()
+                        .requestMatchers("/api/auth/logout").permitAll()
                         .requestMatchers("/api/auth/verify").permitAll()
+                        .requestMatchers("/websocket").permitAll()
                         .anyRequest().authenticated()
                 );
 
