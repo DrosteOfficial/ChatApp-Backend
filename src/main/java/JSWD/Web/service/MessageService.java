@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +59,7 @@ public class MessageService {
     }
 
 
-    public void saveMessage(JsonPayload payload, WebSocketSession session) throws Exception {
+    public void saveMessage(JsonPayload payload, WebSocketSession session, List<WebSocketSession> sessions) throws Exception {
         if (payload == null) {
             log.error("Payload is null");
             return;
@@ -69,6 +71,7 @@ public class MessageService {
         }
 
         Message msg = payload.getMessage();
+        msg.setTimestamp(Instant.now());
         messageRepository.save(msg);
 
         User user;
@@ -90,7 +93,9 @@ public class MessageService {
 
         userInformationRepository.save(user.getUserInformation());
         userRepository.save(user);
-        session.sendMessage(new TextMessage(payload.getMessage().getMessage()));
+        for (WebSocketSession s : sessions) {
+            s.sendMessage(new TextMessage(user.getUsername() + ":" + payload.getMessage().getMessage()));
+        }
     }
 
     public String saveMess(JsonPayload payload)  {

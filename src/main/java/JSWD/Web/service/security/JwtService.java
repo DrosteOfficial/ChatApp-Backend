@@ -1,8 +1,14 @@
 package JSWD.Web.service.security;
 
+import JSWD.Web.model.comunication.JsonPayload;
+import JSWD.Web.model.security.UserDetailsImpl;
 import JSWD.Web.model.security.token.RegularToken;
+import JSWD.Web.model.security.user.User;
+import JSWD.Web.model.security.user.UserCredentials;
 import JSWD.Web.repositories.SecurityAuth.RefreshTokenRepository;
 import JSWD.Web.repositories.SecurityAuth.RegularTokenRepository;
+import JSWD.Web.repositories.SecurityAuth.UserCredentialsRepository;
+import JSWD.Web.repositories.SecurityAuth.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -18,10 +24,7 @@ import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.time.Instant;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
@@ -32,7 +35,12 @@ public class JwtService {
     private RegularTokenRepository tokenRepository;
 
     @Autowired
+    private UserCredentialsRepository userCredentialsRepository;
+
+    @Autowired
     private RefreshTokenRepository refreshTokenRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Value("${cardinal.app.jwtSecret}")
     private String jwtSecret;
@@ -40,9 +48,10 @@ public class JwtService {
     @Value("${cardinal.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    public JwtService(RegularTokenRepository tokenRepository, RefreshTokenRepository refreshTokenRepository) {
+    public JwtService(RegularTokenRepository tokenRepository, RefreshTokenRepository refreshTokenRepository, UserRepository userRepository ) {
         this.tokenRepository = tokenRepository;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.userRepository = userRepository;
     }
 
     public String generateToken(Authentication authentication, HttpServletRequest request) {
@@ -206,6 +215,23 @@ public class JwtService {
         }
 
         return null;
+    }
+    public boolean isUserTokenValid(JsonPayload jsonPayload) {
+
+        int userId = jsonPayload.getMessage().getSenderId();
+
+        List<RegularToken> userTokens = tokenRepository.FindAllRegularTokensByUserID((long)userId).stream().toList();
+
+        User user = userRepository.findById((long)userId).get();
+
+        for (RegularToken token : userTokens) {
+            if(token.getToken().equals(jsonPayload.getRegularToken())){
+                assert token.getExpiredTime() != null;
+                    return true;
+            }
+        }
+
+        return false;
     }
 
 

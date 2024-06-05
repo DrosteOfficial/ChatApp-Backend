@@ -33,7 +33,7 @@ public class TokenExpireTask {
     }
 
     @Async
-    @Scheduled(fixedRate = 1 , timeUnit = TimeUnit.MINUTES )
+    @Scheduled(fixedRate = 10 , timeUnit = TimeUnit.MINUTES )
     public void checkForExpiredTokens(){
         log.info( "Checking for expired tokens");
          var tokens = this.regularTokenRepository.findAllNotExpired();
@@ -44,15 +44,15 @@ public class TokenExpireTask {
         tokens.forEach(token -> {
             if(!token.isRevoked() && jwtService.isTokenExpired(token.getToken())){
                 log.info("Token expired: " + token.getToken());
-                token.setExpired(true);
-                token.setExpiredTime(Instant.now());
+                token.setRevoked(true);
+                token.setRevokedTime(Instant.now()) ;
                 this.regularTokenRepository.save(token);
             }
         });
     }
 
     @Async
-    @Scheduled(fixedRate = 1 , timeUnit = TimeUnit.MINUTES )
+    @Scheduled(fixedRate = 10 , timeUnit = TimeUnit.MINUTES )
     public void checkForRevokedTokens(){
         log.info( "No refresh tokens found");
         var foundTokens = this.refreshTokenRepository.findAllNotRevoked();
@@ -63,8 +63,8 @@ public class TokenExpireTask {
         foundTokens.forEach(token -> {
             if(token.isRevoked() && jwtService.isTokenExpired(token.getToken())){
                 log.info("Token revoked: " + token.getToken());
-                token.setExpired(true);
-                token.setExpiredTime(Instant.now());
+                token.setRevoked(true);
+                token.setRevokedTime(Instant.now());
                 this.refreshTokenRepository.save(token);
             }
         });

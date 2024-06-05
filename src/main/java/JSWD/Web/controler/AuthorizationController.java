@@ -5,6 +5,7 @@ import JSWD.Web.model.comunication.LogoutRequest;
 import JSWD.Web.model.comunication.RefreshRequest;
 import JSWD.Web.model.comunication.RegisterRequest;
 import JSWD.Web.service.security.AuthorizationService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "*")
 public class AuthorizationController {
     @Autowired
     AuthorizationService service;
@@ -38,13 +40,13 @@ public class AuthorizationController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest signUpRequest) {
         return service.register(signUpRequest);
     }
-
+    @RolesAllowed("ROLE_USER")
     @PostMapping("/refresh-token")
     @ResponseBody
     public ResponseEntity<?> refreshToken(HttpServletRequest request, @Valid @RequestBody RefreshRequest refreshRequest) {
         return service.refreshToken(request, refreshRequest);
     }
-
+    @RolesAllowed("ROLE_USER")
     @GetMapping("/verify")
     @ResponseBody
     public ResponseEntity<?> logoutUser() {

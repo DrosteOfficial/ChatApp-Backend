@@ -15,9 +15,8 @@ public class Message {
     private int senderId;
 
 
-    public Message(String message, Instant timestamp, int sender) {
+    public Message(String message,  int sender) {
         this.message = message;
-        this.timestamp = timestamp;
         this.senderId = sender;
     }
 

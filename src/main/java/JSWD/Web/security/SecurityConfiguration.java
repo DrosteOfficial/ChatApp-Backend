@@ -76,6 +76,7 @@ public class SecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecu
                         .anyRequest().authenticated()
                 );
 
+
         http.authenticationProvider(authenticationProvider());
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

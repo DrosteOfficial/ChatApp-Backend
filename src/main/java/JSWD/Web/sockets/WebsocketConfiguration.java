@@ -1,5 +1,7 @@
 package JSWD.Web.sockets;
 
+import JSWD.Web.repositories.SecurityAuth.RefreshTokenRepository;
+import JSWD.Web.repositories.SecurityAuth.RegularTokenRepository;
 import JSWD.Web.repositories.SecurityAuth.UserInformationRepository;
 import JSWD.Web.repositories.chatSpecific.IMessageRepository;
 import JSWD.Web.repositories.SecurityAuth.UserRepository;
@@ -22,18 +24,24 @@ public class WebsocketConfiguration implements WebSocketConfigurer {
     private TopicRepository topicRepository;
     @Autowired
     private UserInformationRepository userInformationRepository;
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
+    @Autowired
+    private RegularTokenRepository regularTokenRepository;
 
 
-    public WebsocketConfiguration(UserRepository userRepository, IMessageRepository messageRepository, TopicRepository topicRepository, UserInformationRepository userInformationRepository) {
+    public WebsocketConfiguration(UserRepository userRepository, IMessageRepository messageRepository, TopicRepository topicRepository, UserInformationRepository userInformationRepository, RefreshTokenRepository refreshTokenRepository, RegularTokenRepository regularTokenRepository) {
         this.userRepository = userRepository;
         this.messageRepository = messageRepository;
         this.topicRepository = topicRepository;
         this.userInformationRepository = userInformationRepository;
+        this.refreshTokenRepository = refreshTokenRepository;
+        this.regularTokenRepository = regularTokenRepository;
     }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new WebSocketHandler(messageRepository,userRepository,topicRepository,userInformationRepository), "/websocket")
+        registry.addHandler(new WebSocketHandler(messageRepository,userRepository,topicRepository,userInformationRepository,refreshTokenRepository,regularTokenRepository), "/websocket")
                 .setAllowedOrigins("*");
     }
 }

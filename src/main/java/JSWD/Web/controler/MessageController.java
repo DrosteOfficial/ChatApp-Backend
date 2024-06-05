@@ -3,13 +3,16 @@ package JSWD.Web.controler;
 import JSWD.Web.model.chatSpecific.Message;
 import JSWD.Web.model.comunication.JsonPayload;
 import JSWD.Web.service.MessageService;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@RolesAllowed("ROLE_USER")
 @RestController
+@CrossOrigin(origins = "*")
+
 @RequestMapping("/message")
 public class MessageController {
     @Autowired

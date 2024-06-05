@@ -20,7 +20,7 @@ public interface RegularTokenRepository extends JpaRepository<RegularToken, Long
     )
     Collection<RegularToken> findAllNotExpired();
     @Query(
-            value = "SELECT * FROM refresh_token WHERE user_id=:id",
+            value = "SELECT * FROM regular_token WHERE user_id=:id",
             nativeQuery = true
     )
     Collection<RegularToken> FindAllRegularTokensByUserID(@Param("id") Long id);

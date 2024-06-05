@@ -2,6 +2,7 @@ package JSWD.Web.controler;
 
 import JSWD.Web.service.ImageService;
 import ch.qos.logback.core.model.Model;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +14,9 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.regex.Pattern;
-
+@RolesAllowed("ROLE_USER")
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/image")
 public class ImageController {
     private final String BASE64_REGEX = "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$";
