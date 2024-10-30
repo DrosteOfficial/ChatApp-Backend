@@ -2,14 +2,29 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.6'
     id 'io.spring.dependency-management' version '1.1.0'
+    id 'checkstyle'
 }
 
 group = 'JSWD.Web'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '20'
 
+checkstyle {
+    toolVersion = '10.19.0'
+    config = resources.text.fromUri('https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml')
+}
+
+tasks.withType(Checkstyle) {
+    reports {
+        xml.required = false
+        html.required = true
+        html.outputLocation = file("${buildDir}/reports/checkstyle.html")
+    }
+}
+
 repositories {
     mavenCentral()
+
 }
 
 dependencies {
