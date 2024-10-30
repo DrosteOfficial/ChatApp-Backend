@@ -18,7 +18,7 @@ public class Topic {
     private Collection<Message> messages;
 
 
-    public Topic( String topic) {
+    public Topic(String topic) {
         this.topic = topic;
     }
     public Topic(int id, String topic) {

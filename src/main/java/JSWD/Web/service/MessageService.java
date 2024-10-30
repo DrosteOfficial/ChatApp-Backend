@@ -98,7 +98,7 @@ public class MessageService {
         }
     }
 
-    public String saveMess(JsonPayload payload)  {
+    public String saveMess(JsonPayload payload) {
         if (payload == null) {
             log.error("Payload is null");
             return "Payload is null";

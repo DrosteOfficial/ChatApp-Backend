@@ -48,7 +48,7 @@ public class JwtService {
     @Value("${cardinal.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    public JwtService(RegularTokenRepository tokenRepository, RefreshTokenRepository refreshTokenRepository, UserRepository userRepository ) {
+    public JwtService(RegularTokenRepository tokenRepository, RefreshTokenRepository refreshTokenRepository, UserRepository userRepository) {
         this.tokenRepository = tokenRepository;
         this.refreshTokenRepository = refreshTokenRepository;
         this.userRepository = userRepository;
@@ -165,8 +165,8 @@ public class JwtService {
                 return false;
             }
 
-            return username.equals(userDetails.getUsername()) && !this.isTokenExpired(authToken) &&
-                    ua.equals(this.getUserAgent(authToken)) && ip.equals(this.getForwardedFor(authToken));
+            return username.equals(userDetails.getUsername()) && !this.isTokenExpired(authToken)
+                    && ua.equals(this.getUserAgent(authToken)) && ip.equals(this.getForwardedFor(authToken));
         } catch (MalformedJwtException e) {
             logger.error("Invalid JWT token: {}", e.getMessage());
         } catch (ExpiredJwtException e) {
@@ -220,9 +220,9 @@ public class JwtService {
 
         int userId = jsonPayload.getMessage().getSenderId();
 
-        List<RegularToken> userTokens = tokenRepository.FindAllRegularTokensByUserID((long)userId).stream().toList();
+        List<RegularToken> userTokens = tokenRepository.FindAllRegularTokensByUserID((long) userId).stream().toList();
 
-        User user = userRepository.findById((long)userId).get();
+        User user = userRepository.findById((long) userId).get();
 
         for (RegularToken token : userTokens) {
             if(token.getToken().equals(jsonPayload.getRegularToken())){

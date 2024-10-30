@@ -122,8 +122,12 @@ public class RegularToken {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof RegularToken token1)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof RegularToken token1)) {
+            return false;
+        }
         return expired == token1.expired && revoked == token1.revoked && Objects.equals(id, token1.id) && Objects.equals(userCredentials, token1.userCredentials) && Objects.equals(token, token1.token) && Objects.equals(expiredTime, token1.expiredTime) && Objects.equals(revokedTime, token1.revokedTime) && Objects.equals(timestamp, token1.timestamp);
     }
 
@@ -134,15 +138,15 @@ public class RegularToken {
 
     @Override
     public String toString() {
-        return "Token{" +
-                "id=" + id +
-                ", user=" + userCredentials +
-                ", token='" + token + '\'' +
-                ", expired=" + expired +
-                ", expiredTime=" + expiredTime +
-                ", revoked=" + revoked +
-                ", revokedTime=" + revokedTime +
-                ", timestamp=" + timestamp +
-                '}';
+        return "Token{"
+                + "id=" + id
+                + ", user=" + userCredentials
+                + ", token='" + token + '\''
+                + ", expired=" + expired
+                + ", expiredTime=" + expiredTime
+                + ", revoked=" + revoked
+                + ", revokedTime=" + revokedTime
+                + ", timestamp=" + timestamp
+                + '}';
     }
 }

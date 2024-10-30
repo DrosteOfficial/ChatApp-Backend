@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class WebSocketHandler extends AbstractWebSocketHandler {
 
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(WebSocketHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(WebSocketHandler.class);
     private final Logger logger = LoggerFactory.getLogger(WebSocketHandler.class.getName());
     private final IMessageRepository messageRepository;
     private final UserRepository userRepository;
@@ -42,11 +42,11 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
     private final RefreshTokenRepository refreshTokenRepository;
     private final RegularTokenRepository regularTokenRepository;
 
-    private Map<Long, User> userCache = new HashMap<>();
-    private List<WebSocketSession> activeUsersSesions= new ArrayList<>();
+    private final Map<Long, User> userCache = new HashMap<>();
+    private final List<WebSocketSession> activeUsersSesions = new ArrayList<>();
 
 
-    public WebSocketHandler(IMessageRepository messageRepository, UserRepository userRepository, TopicRepository topicRepository, UserInformationRepository userInformationRepository , RefreshTokenRepository refreshTokenRepository, RegularTokenRepository regularTokenRepository  ) {
+    public WebSocketHandler(IMessageRepository messageRepository, UserRepository userRepository, TopicRepository topicRepository, UserInformationRepository userInformationRepository, RefreshTokenRepository refreshTokenRepository, RegularTokenRepository regularTokenRepository) {
         this.messageRepository = messageRepository;
         this.userRepository = userRepository;
         this.topicRepository = topicRepository;
@@ -86,7 +86,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
         // Find the "topic" parameter
         String topicName = null;
         for (NameValuePair param : params) {
-            if (param.getName().equals("topic")) {
+            if ("topic".equals(param.getName())) {
                 topicName = param.getValue();
                 break;
             }
@@ -110,9 +110,9 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
 
         List<String> rawMessages = new ArrayList<>();
         for (Message message : messageList) {
-            User user = userCache.get((long)message.getSenderId());
+            User user = userCache.get((long) message.getSenderId());
             if (user == null) {
-                user = userRepository.findById((long)message.getSenderId()).get();
+                user = userRepository.findById((long) message.getSenderId()).get();
                 userCache.put(user.getId(), user);
             }
             rawMessages.add(user.getUsername() + ":" + message.getMessage());

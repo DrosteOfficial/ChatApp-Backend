@@ -18,7 +18,7 @@ public class ImageService {
     }
 
     @Transactional
-    public Optional<String> GetImageData(int userId){
+    public Optional<String> GetImageData(int userId) {
         var imageData = imageRepository.findById((long) userId).get().getImageData();
         if (imageData.isEmpty()) {
             return Optional.empty();

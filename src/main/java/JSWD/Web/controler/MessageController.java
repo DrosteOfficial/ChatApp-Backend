@@ -38,7 +38,7 @@ public class MessageController {
     }
 
     @PostMapping("/save")
-    public void saveMessage(@RequestBody JsonPayload message ) {
+    public void saveMessage(@RequestBody JsonPayload message) {
         messageService.saveMess(message);
     }
 

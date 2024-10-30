@@ -10,4 +10,3 @@ public class NoMasurementFoundException extends RuntimeException {
         super("Could not found any measurements");
     }
 }
-

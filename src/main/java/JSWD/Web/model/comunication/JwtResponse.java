@@ -12,7 +12,7 @@ public class JwtResponse {
     private String email;
     private List<String> roles;
 
-    public JwtResponse(String token,String refreshToken,  String type, long id, String username, String email, List<String> roles) {
+    public JwtResponse(String token, String refreshToken, String type, long id, String username, String email, List<String> roles) {
         this.token = token;
         this.refreshToken = refreshToken;
         this.type = type;
@@ -80,8 +80,12 @@ public class JwtResponse {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         JwtResponse that = (JwtResponse) o;
         return id == that.id && Objects.equals(token, that.token) && Objects.equals(refreshToken, that.refreshToken) && Objects.equals(type, that.type) && Objects.equals(username, that.username) && Objects.equals(email, that.email) && Objects.equals(roles, that.roles);
     }
@@ -93,14 +97,14 @@ public class JwtResponse {
 
     @Override
     public String toString() {
-        return "JwtResponse{" +
-                "token='" + token + '\'' +
-                ", refreshToken='" + refreshToken + '\'' +
-                ", type='" + type + '\'' +
-                ", id=" + id +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", roles=" + roles +
-                '}';
+        return "JwtResponse{"
+                + "token='" + token + '\''
+                + ", refreshToken='" + refreshToken + '\''
+                + ", type='" + type + '\''
+                + ", id=" + id
+                + ", username='" + username + '\''
+                + ", email='" + email + '\''
+                + ", roles=" + roles
+                + '}';
     }
 }

@@ -56,7 +56,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            if (e.getMessage().equalsIgnoreCase("Token invalid")) {
+            if ("Token invalid".equalsIgnoreCase(e.getMessage())) {
                 logger.warn("Invalid token send to server.");
             } else {
                 logger.error("Cannot set user authentication: ", e);

@@ -15,7 +15,7 @@ public class Message {
     private int senderId;
 
 
-    public Message(String message,  int sender) {
+    public Message(String message, int sender) {
         this.message = message;
         this.senderId = sender;
     }
@@ -54,4 +54,3 @@ public class Message {
         this.senderId = senderId;
     }
 }
-

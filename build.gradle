@@ -3,11 +3,16 @@ plugins {
     id 'org.springframework.boot' version '3.0.6'
     id 'io.spring.dependency-management' version '1.1.0'
     id 'checkstyle'
+    id("org.openrewrite.rewrite") version("6.26.0")
 }
 
 group = 'JSWD.Web'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '20'
+
+rewrite {
+    activeRecipe("org.openrewrite.staticanalysis.CodeCleanup")
+}
 
 checkstyle {
     toolVersion = '10.19.0'
@@ -62,8 +67,7 @@ dependencies {
 
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2'
 
-
-
+    rewrite 'org.openrewrite.recipe:rewrite-static-analysis:1.19.0'
 }
 
 tasks.named('compileJava') {

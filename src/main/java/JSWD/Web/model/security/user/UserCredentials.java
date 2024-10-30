@@ -99,15 +99,14 @@ public class UserCredentials {
 
     @Override
     public String toString() {
-        return "UserCredentials{" +
-                "id=" + id +
-                ", password='" + password + '\'' +
-                ", active=" + active +
-                ", locked=" + locked +
-                ", accountExpireDate=" + accountExpireDate +
-                ", credentialsExpireDate=" + credentialsExpireDate +
-                ", createTimestamp=" + createTimestamp +
-                '}';
+        return "UserCredentials{"
+                + "id=" + id
+                + ", password='" + password + '\''
+                + ", active=" + active
+                + ", locked=" + locked
+                + ", accountExpireDate=" + accountExpireDate
+                + ", credentialsExpireDate=" + credentialsExpireDate
+                + ", createTimestamp=" + createTimestamp
+                + '}';
     }
 }
-
